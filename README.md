@@ -180,7 +180,122 @@ traceroute to 8.8.8.8 (8.8.8.8), 30 hops max, 60 byte packets
 ```
 ---
 6. Повторите задание 5 в утилите `mtr`. На каком участке наибольшая задержка - delay?
+### Ответ:
+
+Наибольшая задержка на строке №6, хотя сильная потеря пакетов у нас идет на №5
+
+![image](https://i.ibb.co/mNf2zXd/image.png)
+
+---
+
 7. Какие DNS сервера отвечают за доменное имя dns.google? Какие A записи? воспользуйтесь утилитой `dig`
+### Ответ:
+
+Какие DNS сервера отвечают за доменное имя dns.google 
+```bash
+vagrant@vagrant:~$ dig NS  dns.google
+
+; <<>> DiG 9.16.1-Ubuntu <<>> NS dns.google
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 54470
+;; flags: qr rd ra; QUERY: 1, ANSWER: 4, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;dns.google.			IN	NS
+
+;; ANSWER SECTION:
+dns.google.		6812	IN	NS	ns2.zdns.google.
+dns.google.		6812	IN	NS	ns4.zdns.google.
+dns.google.		6812	IN	NS	ns1.zdns.google.
+dns.google.		6812	IN	NS	ns3.zdns.google.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Sat Jul 02 20:52:13 UTC 2022
+;; MSG SIZE  rcvd: 116
+
+vagrant@vagrant:~$ 
+```
+Какие A записи
+
+```bash
+vagrant@vagrant:~$ dig A dns.google
+
+; <<>> DiG 9.16.1-Ubuntu <<>> A dns.google
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 56065
+;; flags: qr rd ra; QUERY: 1, ANSWER: 2, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;dns.google.			IN	A
+
+;; ANSWER SECTION:
+dns.google.		566	IN	A	8.8.4.4
+dns.google.		566	IN	A	8.8.8.8
+
+;; Query time: 4 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Sat Jul 02 20:53:34 UTC 2022
+;; MSG SIZE  rcvd: 71
+
+vagrant@vagrant:~$ 
+```
+
+
 8. Проверьте PTR записи для IP адресов из задания 7. Какое доменное имя привязано к IP? воспользуйтесь утилитой `dig`
 
-В качестве ответов на вопросы можно приложите лог выполнения команд в консоли или скриншот полученных результатов.
+### Ответ:
+
+```bash
+vagrant@vagrant:~$ dig -x 8.8.8.8
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 8.8.8.8
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 23804
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;8.8.8.8.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+8.8.8.8.in-addr.arpa.	3668	IN	PTR	dns.google.
+
+;; Query time: 0 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Sat Jul 02 20:56:33 UTC 2022
+;; MSG SIZE  rcvd: 73
+
+vagrant@vagrant:~$ dig -x 8.8.4.4
+
+; <<>> DiG 9.16.1-Ubuntu <<>> -x 8.8.4.4
+;; global options: +cmd
+;; Got answer:
+;; ->>HEADER<<- opcode: QUERY, status: NOERROR, id: 50899
+;; flags: qr rd ra; QUERY: 1, ANSWER: 1, AUTHORITY: 0, ADDITIONAL: 1
+
+;; OPT PSEUDOSECTION:
+; EDNS: version: 0, flags:; udp: 65494
+;; QUESTION SECTION:
+;4.4.8.8.in-addr.arpa.		IN	PTR
+
+;; ANSWER SECTION:
+4.4.8.8.in-addr.arpa.	8020	IN	PTR	dns.google.
+
+;; Query time: 3 msec
+;; SERVER: 127.0.0.53#53(127.0.0.53)
+;; WHEN: Sat Jul 02 20:56:40 UTC 2022
+;; MSG SIZE  rcvd: 73
+
+vagrant@vagrant:~$ 
+```
+
+
